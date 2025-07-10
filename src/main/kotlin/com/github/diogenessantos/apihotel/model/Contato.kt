@@ -1,6 +1,12 @@
 package com.github.diogenessantos.apihotel.model
 
-class Contato(var telefone : String ,
-              var email : String) {
+import jakarta.persistence.Embeddable
+
+
+@Embeddable
+class Contato(
+    var telefone: String,
+    var email: String
+) {
 
 }

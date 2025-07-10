@@ -1,10 +1,15 @@
 package com.github.diogenessantos.apihotel.model
 
+import jakarta.persistence.Embedded
+import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
-import org.springframework.boot.autoconfigure.web.WebProperties
+import jakarta.persistence.Table
 
+
+@Entity
+@Table(name = "tb_hotel")
 class Hotel (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -12,11 +17,14 @@ class Hotel (
 
     var nome : String,
     var categoria : String,
-    var email : String,
 
+    @Embedded
+    var contato: Contato,
+
+    @Embedded
     var endereco: Endereco
 ) {
 
-    constructor(nome : String, categoria: String , email: String , endereco: Endereco ) : this(null,
-        nome , categoria,email , endereco){}
+    constructor(nome : String, categoria: String, contato: Contato, endereco: Endereco ) : this(null,
+        nome , categoria,contato , endereco){}
 }

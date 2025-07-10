@@ -1,5 +1,6 @@
 package com.github.diogenessantos.apihotel.model
 
+import jakarta.persistence.Enumerated
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
@@ -14,6 +15,8 @@ class Pagamento (
 
     val data : LocalDateTime,
     var valorTotal : BigDecimal,
+
+    @Enumerated
     var status : StatusPagamento = StatusPagamento.AGUARDANDO
 ) {
 }

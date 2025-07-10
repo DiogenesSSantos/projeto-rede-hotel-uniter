@@ -1,14 +1,13 @@
 package com.github.diogenessantos.apihotel.model
 
+import jakarta.persistence.Embeddable
+import jakarta.persistence.Embedded
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 
+@Embeddable
 class Endereco(
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long?,
-
     var estado: String,
     var cidade: String?,
     var bairro: String?,

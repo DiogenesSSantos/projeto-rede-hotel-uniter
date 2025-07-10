@@ -13,6 +13,5 @@ class Reserva (
     var idFuncionario: Funcionario,
     var idHospede : Hospede,
 
-    var reservaQuarto : List<Quarto>
 ) {
 }

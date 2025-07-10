@@ -1,5 +1,6 @@
 package com.github.diogenessantos.apihotel.model
 
+import jakarta.persistence.Enumerated
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
@@ -11,8 +12,9 @@ class Quarto (
 
     var quantidadeLeitos : Int,
 
-    //TODO POSSIVEL ENUMERATION
     var tipo : String,
+
+    @Enumerated
     var status : StatusQuarto = StatusQuarto.DISPONIVEL,
 
     var senha : Int,

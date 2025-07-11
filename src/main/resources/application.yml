@@ -5,6 +5,11 @@ spring:
     password: Dioge1997
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+
+  jackson:
+    mapper:
+      sort-properties-alphabetically: false
+
   jpa:
     hibernate:
       ddl-auto: none

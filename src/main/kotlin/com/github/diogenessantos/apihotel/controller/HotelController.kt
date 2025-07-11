@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping(path = ["/hotel"])
-class Hotel (val hotelRepository: HotelRepository) {
+class HotelController (val hotelRepository: HotelRepository) {
     
     
     

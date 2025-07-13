@@ -1,9 +1,13 @@
 package com.github.diogenessantos.apihotel.model
 
 import jakarta.persistence.Embedded
+import jakarta.persistence.Entity
 import jakarta.persistence.Id
+import jakarta.persistence.Table
 import org.hibernate.validator.constraints.br.CPF
 
+@Entity
+@Table(name = "tb_hospede")
 class Hospede (
 
     @Id
@@ -14,10 +18,6 @@ class Hospede (
 
     @Embedded
     var contato: Contato,
-
-    @Embedded
-    var endereco: Endereco
-
 
 
     ) {

@@ -7,6 +7,12 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 
+/**
+ * Controlador REST para gerenciar recursos de Funcionário.
+ *
+ * @author DiógenesSantos
+ * @version 1.0
+ */
 @RestController
 @RequestMapping(path = ["/funcionario"])
 class FuncionarioController(val funcionarioRepository: FuncionarioRepository) {

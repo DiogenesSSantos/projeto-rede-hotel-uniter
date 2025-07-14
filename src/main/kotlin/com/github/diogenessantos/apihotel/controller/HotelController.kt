@@ -7,6 +7,14 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
+
+
+/**
+ * Controlador REST para gerenciar recursos de Funcionário.
+ *
+ * @author DiógenesSantos
+ * @version 1.0
+ */
 @RestController
 @RequestMapping(path = ["/hotel"])
 class HotelController (val hotelRepository: HotelRepository) {

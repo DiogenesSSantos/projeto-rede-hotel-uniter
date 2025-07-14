@@ -19,13 +19,18 @@ class Reserva(
 
 
     @ManyToOne
-    @JoinColumn(name = "id_funcionario")
+    @JoinColumn(name = "cpf_id_funcionario")
     var idFuncionario: Funcionario,
+
+    @ManyToOne
+    @JoinColumn(name = "cpf_id_hospede")
+    var idHospede: Hospede,
+
 
 
     @ManyToOne
-    @JoinColumn(name = "id_hospede")
-    var idHospede: Hospede,
+    @JoinColumn(name = "id_quarto")
+    var idQuarto : Quarto
 
     ) {
 }

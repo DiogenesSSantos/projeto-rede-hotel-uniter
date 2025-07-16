@@ -1,5 +1,7 @@
 package com.github.diogenessantos.apihotel.controller
 
+import com.github.diogenessantos.apihotel.build.assembler.FuncionarioAssembler
+import com.github.diogenessantos.apihotel.openapi.documentationfuncionario.FuncionarioDocumentationOpenAPI
 import com.github.diogenessantos.apihotel.repository.funcionario.FuncionarioRepository
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -15,13 +17,16 @@ import org.springframework.web.bind.annotation.RestController
  */
 @RestController
 @RequestMapping(path = ["/funcionario"])
-class FuncionarioController(val funcionarioRepository: FuncionarioRepository) {
+class FuncionarioController(val funcionarioRepository: FuncionarioRepository, val funcionarioAssembler: FuncionarioAssembler) : FuncionarioDocumentationOpenAPI() {
+
+
 
 
 
     @GetMapping
-    fun buscarTodos() : ResponseEntity<Any>? {
-        return ResponseEntity.ok(funcionarioRepository.findAll())
+    override fun buscarTodos() : ResponseEntity<Any>? {
+        val funcionarioDTOS = funcionarioRepository.findAll().map { FuncionarioAssembler.toDto(it) }
+        return ResponseEntity.ok(funcionarioDTOS)
 
     }
 

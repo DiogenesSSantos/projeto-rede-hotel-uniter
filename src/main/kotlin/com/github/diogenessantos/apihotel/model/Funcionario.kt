@@ -5,7 +5,7 @@ import org.hibernate.validator.constraints.br.CPF
 
 @Entity
 @Table(name = "tb_funcionario")
-class Funcionario(
+class Funcionario (
     @Id
     @CPF
     val CPF: Long,

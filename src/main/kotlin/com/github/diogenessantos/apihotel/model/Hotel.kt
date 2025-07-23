@@ -27,4 +27,10 @@ class Hotel (
 
     constructor(nome : String, categoria: String, contato: Contato, endereco: Endereco ) : this(null,
         nome , categoria,contato , endereco){}
+
+    override fun toString(): String {
+        return "Hotel(id=$id, nome='$nome', categoria='$categoria', contato=$contato, endereco=$endereco)"
+    }
+
+
 }

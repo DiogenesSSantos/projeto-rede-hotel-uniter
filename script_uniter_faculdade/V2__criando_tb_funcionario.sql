@@ -22,3 +22,7 @@ VALUES ( 12485879443,1 , 'DIOGNES' , 'diobotnex' , '123' , '84768748' , 'diogene
 SELECT * FROM flyway_schema_history;
 
 SELECT f.nome, f.cidade , h.nome as nome_hotel , h.email as email_hotel FROM tb_funcionario f JOIN tb_hotel h;
+
+
+
+

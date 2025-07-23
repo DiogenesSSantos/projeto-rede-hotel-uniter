@@ -7,22 +7,19 @@ import com.github.diogenessantos.apihotel.model.Funcionario
 import com.github.diogenessantos.apihotel.model.Hotel
 import java.util.*
 
-class FuncionarioBuilder(
-    private var CPF: Long,
-    private var nome: String,
-    private var login: String,
-    private var senha: String,
-    private var contato: Contato,
-    private var endereco: Endereco,
-    private var hotel: Hotel?
-
-
-)  {
+class FuncionarioBuilder {
+    private var cpf: Long? = null
+    private var nome: String? = null
+    private var login: String? = null
+    private var senha: String? = null
+    private var contato: Contato? = null
+    private var endereco: Endereco? = null
+    private var hotel: Hotel? = null
 
     fun cpf (cpf : Long ) = apply {
         Objects.requireNonNull(cpf , "CPF NÃO PODE SER NULO")
         if (cpf.toString().toCharArray().size != 11 ) throw CPFinvalidoException()
-        this.CPF = cpf
+        this.cpf = cpf
     }
 
     fun nome (nome: String?) = apply {
@@ -54,10 +51,15 @@ class FuncionarioBuilder(
         this.hotel = hotel
     }
 
+    fun build(): Funcionario {
+        val cpf = this.cpf ?: throw IllegalStateException("CPF é obrigatório")
+        val nome = this.nome ?: throw IllegalStateException("Nome é obrigatório")
+        val login = this.login ?: throw IllegalStateException("Login é obrigatório")
+        val senha = this.senha ?: throw IllegalStateException("Senha é obrigatória")
+        val contato = this.contato ?: throw IllegalStateException("Contato é obrigatório")
+        val endereco = this.endereco ?: throw IllegalStateException("Endereço é obrigatório")
 
-    fun builder() : Funcionario {
-        return Funcionario(this.CPF , this.nome , this.login , this.senha,
-            this.contato, this.endereco , this.hotel)
+        return Funcionario(cpf, nome, login, senha, contato, endereco, hotel)
     }
 
 

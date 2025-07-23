@@ -5,8 +5,10 @@ spring:
     password: Dioge1997
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-
   jackson:
+    default-property-inclusion: NON_DEFAULT
+    serialization-inclusion: NON_NULL
+
     mapper:
       sort-properties-alphabetically: false
 

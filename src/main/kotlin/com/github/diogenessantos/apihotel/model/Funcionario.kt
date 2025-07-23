@@ -1,6 +1,7 @@
 package com.github.diogenessantos.apihotel.model
 
 import jakarta.persistence.*
+import jakarta.validation.constraints.NotBlank
 import org.hibernate.validator.constraints.br.CPF
 
 @Entity
@@ -10,6 +11,8 @@ class Funcionario (
     @CPF
     val CPF: Long,
 
+
+    @NotBlank
     var nome: String,
     var login: String,
     var senha: String,

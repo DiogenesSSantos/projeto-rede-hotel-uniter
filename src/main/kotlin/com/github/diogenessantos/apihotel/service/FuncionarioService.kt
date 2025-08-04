@@ -3,6 +3,7 @@ package com.github.diogenessantos.apihotel.service
 import com.github.diogenessantos.apihotel.exceptionhandller.exceptionfuncionario.FuncionarioNaoExisteException
 import com.github.diogenessantos.apihotel.model.Funcionario
 import com.github.diogenessantos.apihotel.repository.funcionario.FuncionarioRepository
+import jakarta.transaction.Transactional
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import kotlin.jvm.optionals.getOrElse
@@ -37,5 +38,9 @@ class FuncionarioService (val repository: FuncionarioRepository) {
     }
 
 
+    @Transactional
+    fun salvar(funcionario : Funcionario) : Funcionario {
+        return  repository.save(funcionario)
+    }
 
 }

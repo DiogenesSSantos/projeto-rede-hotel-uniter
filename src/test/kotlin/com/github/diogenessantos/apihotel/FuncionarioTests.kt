@@ -3,10 +3,17 @@ package com.github.diogenessantos.apihotel
 import com.github.diogenessantos.apihotel.build.assembler.FuncionarioAssembler
 import com.github.diogenessantos.apihotel.build.model.FuncionarioBuilder
 import com.github.diogenessantos.apihotel.exceptionhandller.exceptionfuncionario.FuncionarioNaoExisteException
+import com.github.diogenessantos.apihotel.model.Contato
+import com.github.diogenessantos.apihotel.model.Endereco
+import com.github.diogenessantos.apihotel.model.Funcionario
 import com.github.diogenessantos.apihotel.model.Hotel
 import com.github.diogenessantos.apihotel.service.FuncionarioService
 import jakarta.persistence.EntityManager
 import jakarta.persistence.Tuple
+import jakarta.persistence.TypedQuery
+import jakarta.persistence.criteria.CriteriaBuilder
+import jakarta.persistence.criteria.CriteriaQuery
+import jakarta.persistence.criteria.Root
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
@@ -30,12 +37,82 @@ class FuncionarioTests {
 
     @Test
     fun salva_funcionario_happy_path () {
+        val contato : Contato = Contato("8184768748" , "diogenes_bot_nex@gmail.com")
+        val endereo : Endereco = Endereco("Pernanmbuco", "Pombos" , "Alto da balança" , "Rua")
+
+
+        val jpql  = "SELECT h FROM Hotel h WHERE h.id = 1"
+        val hotel : Hotel = entityManager.createQuery(jpql, Hotel::class.java).singleResult
+
         val funcionario = FuncionarioBuilder()
+            .cpf(12485879449)
+            .hotel(hotel)
+            .contato(contato)
+            .endereco(endereo)
             .nome("Diogenes")
             .login("DioBotNex")
             .senha("Dio123")
             .build()
 
+        val funcionarioSalvo = funcionarioService.salvar(funcionario)
+
+        assertNotNull(funcionarioSalvo)
+
+
+    }
+
+
+
+    @Test
+    fun buscar_todos_hoteis_dos_funcionarios_criteriaAPi_happyPath() {
+        val criteriaBuilder : CriteriaBuilder = entityManager.criteriaBuilder
+        val criteriaQuery :  CriteriaQuery<Hotel> = criteriaBuilder.createQuery(Hotel::class.java)
+        val root : Root<Funcionario> = criteriaQuery.from(Funcionario::class.java)
+
+        criteriaQuery.select(root.get("idHotel"))
+
+
+        val TypedQuery : TypedQuery<Hotel> = entityManager.createQuery(criteriaQuery)
+
+        val hoteis : List<Hotel> = TypedQuery.resultList
+
+        println(hoteis)
+
+
+
+
+
+    }
+
+
+
+    @Test
+    fun buscar_todos_hoteis_cadastrado_happy_path() {
+        val jpql : String = "SELECT f.idHotel FROM Funcionario f"
+        val typeQuery : TypedQuery<Hotel> = entityManager.createQuery(jpql , Hotel::class.java)
+
+        val hotelList : List<Hotel> = typeQuery.resultList
+
+        println(hotelList)
+
+
+    }
+
+
+    @Test
+    fun teste_innerJoin () {
+        val jpql : String = "SELECT f from Funcionario f " +
+                "JOIN  f.idHotel h where h.id = 1"
+
+        val typedQuery : TypedQuery<Funcionario> = entityManager.createQuery(jpql , Funcionario::class.java)
+
+        val listaFuncionario : List<Funcionario> = typedQuery.resultList
+
+        listaFuncionario.forEach { it->
+            val funcionarioDto = FuncionarioAssembler.toDto(it)
+            println(funcionarioDto)
+
+        }
 
     }
 

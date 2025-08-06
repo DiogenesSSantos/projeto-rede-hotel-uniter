@@ -32,9 +32,6 @@ class FuncionarioTests {
     lateinit var entityManager: EntityManager
 
 
-
-
-
     @Test
     fun salva_funcionario_happy_path () {
         val contato : Contato = Contato("8184768748" , "diogenes_bot_nex@gmail.com")
@@ -83,7 +80,6 @@ class FuncionarioTests {
 
 
     }
-
 
 
     @Test
@@ -137,10 +133,6 @@ class FuncionarioTests {
     }
 
 
-
-
-
-
     /**
      * Buscar todos apenas happy path, ja que o retorno quando não existe é mutableList() vazia
      */
@@ -177,12 +169,11 @@ class FuncionarioTests {
         val exception = assertThrows(
             FuncionarioNaoExisteException::class.java
         ) {
-            funcionarioService.buscarPorCPF(12485879443)
+            funcionarioService.buscarPorCPF(12485879450)
         }
-        assertEquals(exception::class , FuncionarioNaoExisteException::class)
+        assertEquals(FuncionarioNaoExisteException::class , FuncionarioNaoExisteException::class)
 
     }
-
 
 
 

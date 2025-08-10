@@ -24,7 +24,7 @@ class ExceptionHandllerGlobal {
 
 
         val problem = Problem(
-            HttpStatus.BAD_REQUEST.ordinal, ex.message!!,
+            HttpStatus.BAD_REQUEST.value(), ex.message!!,
             "CPF INVALIDO",
             LocalDateTime.now(),
             CPFinvalidoException::class.toString()

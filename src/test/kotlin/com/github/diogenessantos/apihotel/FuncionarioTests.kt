@@ -77,6 +77,39 @@ class FuncionarioTests {
 
     }
 
+
+
+    @Test
+    fun buscar_por_cpf_happy_path() {
+        val funcionarioLocalizado = funcionarioService.buscarPorCPF(12485879443)
+
+        assertNotNull(funcionarioLocalizado)
+        assertEquals(12485879443 , funcionarioLocalizado.CPF)
+
+        println(FuncionarioAssembler.toDto(funcionarioLocalizado))
+
+    }
+
+
+    /**
+     * Se caso o usuário não exista será lançada a exception assim validamos se essa está no sistema
+     */
+    @Test
+    fun buscar_por_cpf_usuario_nao_existe_exception() {
+        val exception = assertThrows(
+            FuncionarioNaoExisteException::class.java
+        ) {
+            funcionarioService.buscarPorCPF(12485879450)
+        }
+
+
+
+        assertEquals(FuncionarioNaoExisteException::class , FuncionarioNaoExisteException::class)
+
+    }
+
+
+
     @Test
     fun buscar_por_cpf_exceptionCPFInvalido_para_null_ou_incorreto() {
         val cpf : Long = 87987564
@@ -110,7 +143,7 @@ class FuncionarioTests {
 
 
     @Test
-    fun buscar_todos_hoteis_cadastrado_happy_path() {
+    fun buscar_todos_hoteis_dos_funcionarios_happy_path() {
         val jpql : String = "SELECT f.idHotel FROM Funcionario f"
         val typeQuery : TypedQuery<Hotel> = entityManager.createQuery(jpql , Hotel::class.java)
 
@@ -122,25 +155,10 @@ class FuncionarioTests {
     }
 
 
-    @Test
-    fun teste_innerJoin () {
-        val jpql : String = "SELECT f from Funcionario f " +
-                "JOIN  f.idHotel h where h.id = 1"
-
-        val typedQuery : TypedQuery<Funcionario> = entityManager.createQuery(jpql , Funcionario::class.java)
-
-        val listaFuncionario : List<Funcionario> = typedQuery.resultList
-
-        listaFuncionario.forEach { it->
-            val funcionarioDto = FuncionarioAssembler.toDto(it)
-            println(funcionarioDto)
-
-        }
-
-    }
-
-
-
+    /**
+     * Esse teste em especificio usando preojeção de dados, escolhendo atributos especifico, o correto e usar
+     * um DTO com os dados que utilizaremos.
+     */
     @Test
     fun buscar_hotel_funcionario_happy_path () {
         val jpql : String  = "SELECT f.nome AS nome, f.idHotel AS hotel FROM Funcionario f"
@@ -174,37 +192,5 @@ class FuncionarioTests {
         }
 
     }
-
-
-    @Test
-    fun buscar_por_cpf_happy_path() {
-        val funcionarioLocalizado = funcionarioService.buscarPorCPF(12485879443)
-
-        assertNotNull(funcionarioLocalizado)
-        assertEquals(12485879443 , funcionarioLocalizado.CPF)
-
-        println(FuncionarioAssembler.toDto(funcionarioLocalizado))
-
-    }
-
-
-    /**
-     * Se caso o usuário não exista será lançada a exception assim validamos se essa está no sistema
-     */
-    @Test
-    fun buscar_por_cpf_usuario_nao_existe_exception() {
-        val exception = assertThrows(
-            FuncionarioNaoExisteException::class.java
-        ) {
-            funcionarioService.buscarPorCPF(12485879450)
-        }
-
-
-
-        assertEquals(FuncionarioNaoExisteException::class , FuncionarioNaoExisteException::class)
-
-    }
-
-
 
 }

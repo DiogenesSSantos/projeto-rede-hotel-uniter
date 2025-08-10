@@ -1,12 +1,16 @@
 package com.github.diogenessantos.apihotel.controller
 
 import com.github.diogenessantos.apihotel.build.assembler.FuncionarioAssembler
+import com.github.diogenessantos.apihotel.controller.DTOS.FuncionarioRequestDTO
+import com.github.diogenessantos.apihotel.model.Funcionario
 import com.github.diogenessantos.apihotel.openapi.documentationfuncionario.FuncionarioDocumentationOpenAPI
 import com.github.diogenessantos.apihotel.repository.funcionario.FuncionarioRepository
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -29,21 +33,25 @@ class FuncionarioController(
 
     @GetMapping
     override fun buscarTodos(@PageableDefault(page = 0, size = 5) pageable: Pageable): ResponseEntity<Any>? {
-        val funcionarioDTOS = funcionarioRepository.findAll(pageable).map { FuncionarioAssembler.toDto(it) }
+        val funcionarioDTOS = funcionarioRepository.findAll(pageable).map { funcionarioAssembler.toDto(it) }
         return ResponseEntity.ok(funcionarioDTOS)
 
     }
 
 
     @GetMapping("/buscarpornome")
-    fun buscarPorNome(
-        @RequestParam("nome") nome: String,
-        @PageableDefault(page = 0, size = 5) pageable: Pageable
-    ): ResponseEntity<Any>? {
+    override  fun buscarPorNome(@RequestParam("nome") nome: String, @PageableDefault(page = 0, size = 5) pageable: Pageable): ResponseEntity<Any>? {
 
-        val funcionarioDTOS = funcionarioRepository.buscarPorNome(nome , pageable).map { FuncionarioAssembler.toDto(it) }
+        val funcionarioDTOS = funcionarioRepository.buscarPorNome(nome , pageable).map { funcionarioAssembler.toDto(it) }
         return ResponseEntity.ok(funcionarioDTOS)
 
+    }
+
+
+    @PostMapping
+    fun salvar(@RequestBody funcionario : FuncionarioRequestDTO) : Funcionario {
+        val funcionarioSalvo = funcionarioRepository.save(funcionarioAssembler.toModel(funcionario))
+        return funcionarioSalvo
     }
 
 

@@ -36,4 +36,11 @@ abstract class FuncionarioDocumentationOpenAPI {
         )]
     )
      abstract fun buscarTodos(@PageableDefault(page = 0 , size = 5 ) pageable: Pageable): ResponseEntity<Any>?
+
+
+
+
+
+
+
 }

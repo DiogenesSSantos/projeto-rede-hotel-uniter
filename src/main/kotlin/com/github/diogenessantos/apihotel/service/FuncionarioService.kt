@@ -1,5 +1,6 @@
 package com.github.diogenessantos.apihotel.service
 
+import com.github.diogenessantos.apihotel.exceptionhandller.exceptionfuncionario.CPFinvalidoException
 import com.github.diogenessantos.apihotel.exceptionhandller.exceptionfuncionario.FuncionarioNaoExisteException
 import com.github.diogenessantos.apihotel.model.Funcionario
 import com.github.diogenessantos.apihotel.repository.funcionario.FuncionarioRepository
@@ -32,9 +33,14 @@ class FuncionarioService (val repository: FuncionarioRepository) {
     }
 
 
+    @Transactional
     fun buscarPorCPF (cpf : Long): Funcionario{
-        val funcionario = repository.findByCPF(cpf)
-        return funcionario.getOrElse { throw FuncionarioNaoExisteException() }
+        cpf.toString().let { it -> if (it.length < 11) {
+                throw CPFinvalidoException()
+            }
+        }
+        val funcionario = repository.buscarPorCPF(cpf)
+        return funcionario
     }
 
 

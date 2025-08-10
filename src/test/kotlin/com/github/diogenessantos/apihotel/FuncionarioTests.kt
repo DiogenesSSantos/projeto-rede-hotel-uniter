@@ -23,6 +23,13 @@ import org.springframework.boot.test.context.SpringBootTest
 import java.util.Objects
 import kotlin.test.assertEquals
 
+
+/**
+ * @author DiogenesSantos
+ *
+ * Classe de teste de funcionario
+ */
+
 @SpringBootTest
 class FuncionarioTests {
     @Autowired
@@ -58,6 +65,29 @@ class FuncionarioTests {
 
     }
 
+    @Test
+    fun buscar_por_cpf_happyPath() {
+        val cpf = 12485879443
+        val funcionarioLocalizado = funcionarioService.buscarPorCPF(cpf)
+
+        assertNotNull(funcionarioLocalizado)
+        assertEquals(funcionarioLocalizado.nome , "Diogenes")
+
+        println(FuncionarioAssembler.toDto(funcionarioLocalizado))
+
+    }
+
+    @Test
+    fun buscar_por_cpf_exceptionCPFInvalido_para_null_ou_incorreto() {
+        val cpf : Long = 87987564
+        assertThrows(FuncionarioNaoExisteException::class.java)
+        { funcionarioService.buscarPorCPF(12485879450) }
+
+
+    }
+
+
+
 
 
     @Test
@@ -74,9 +104,6 @@ class FuncionarioTests {
         val hoteis : List<Hotel> = TypedQuery.resultList
 
         println(hoteis)
-
-
-
 
 
     }
@@ -171,6 +198,9 @@ class FuncionarioTests {
         ) {
             funcionarioService.buscarPorCPF(12485879450)
         }
+
+
+
         assertEquals(FuncionarioNaoExisteException::class , FuncionarioNaoExisteException::class)
 
     }

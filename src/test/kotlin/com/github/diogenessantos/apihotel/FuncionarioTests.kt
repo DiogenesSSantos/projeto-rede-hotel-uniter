@@ -1,6 +1,5 @@
 package com.github.diogenessantos.apihotel
 
-import com.github.diogenessantos.apihotel.build.assembler.FuncionarioAssembler
 import com.github.diogenessantos.apihotel.build.model.FuncionarioBuilder
 import com.github.diogenessantos.apihotel.exceptionhandller.exceptionfuncionario.FuncionarioNaoExisteException
 import com.github.diogenessantos.apihotel.model.Contato
@@ -13,14 +12,14 @@ import jakarta.persistence.Tuple
 import jakarta.persistence.TypedQuery
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery
+import jakarta.persistence.criteria.JoinType
+import jakarta.persistence.criteria.Predicate
 import jakarta.persistence.criteria.Root
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
-import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import java.util.Objects
 import kotlin.test.assertEquals
 
 
@@ -73,7 +72,7 @@ class FuncionarioTests {
         assertNotNull(funcionarioLocalizado)
         assertEquals(funcionarioLocalizado.nome , "Diogenes")
 
-        println(FuncionarioAssembler.toDto(funcionarioLocalizado))
+//        println(FuncionarioAssembler.toDto(funcionarioLocalizado))
 
     }
 
@@ -86,7 +85,7 @@ class FuncionarioTests {
         assertNotNull(funcionarioLocalizado)
         assertEquals(12485879443 , funcionarioLocalizado.CPF)
 
-        println(FuncionarioAssembler.toDto(funcionarioLocalizado))
+//        println(FuncionarioAssembler.toDto(funcionarioLocalizado))
 
     }
 
@@ -187,10 +186,40 @@ class FuncionarioTests {
         assertNotNull(funcionarios)
 
         funcionarios.forEach {
-            val funcionarioDto = FuncionarioAssembler.toDto(it)
-            println(funcionarioDto)
+//            val funcionarioDto = FuncionarioAssembler.toDto(it)
+//            println(funcionarioDto)
         }
 
     }
+
+    @Test
+    fun testando_predicates_em_consulta_por_nome() {
+        val nome : String = "Di"
+        val builder : CriteriaBuilder = entityManager.criteriaBuilder
+        val query : CriteriaQuery<Funcionario> = builder.createQuery(Funcionario::class.java)
+        val root : Root<Funcionario> = query.from(Funcionario::class.java)
+        val join = root.fetch<Funcionario, Hotel>("idHotel", JoinType.INNER)
+
+
+        var predicates : MutableList<Predicate> = mutableListOf()
+        query.select(root)
+
+
+        if (nome != null) {
+            predicates.add(builder.like(root.get("nome") , nome+"%"))
+        }
+
+        query.where(*predicates.toTypedArray())
+
+
+        val typeQuery : TypedQuery<Funcionario> = entityManager.createQuery(query)
+        val listaFuncionario : List<Funcionario> = typeQuery.resultList
+
+        println(listaFuncionario)
+
+
+    }
+
+
 
 }

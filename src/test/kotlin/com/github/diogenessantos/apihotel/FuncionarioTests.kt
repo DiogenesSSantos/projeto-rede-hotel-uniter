@@ -12,7 +12,9 @@ import jakarta.persistence.Tuple
 import jakarta.persistence.TypedQuery
 import jakarta.persistence.criteria.CriteriaBuilder
 import jakarta.persistence.criteria.CriteriaQuery
+import jakarta.persistence.criteria.Expression
 import jakarta.persistence.criteria.JoinType
+import jakarta.persistence.criteria.Path
 import jakarta.persistence.criteria.Predicate
 import jakarta.persistence.criteria.Root
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -39,13 +41,13 @@ class FuncionarioTests {
 
 
     @Test
-    fun salva_funcionario_happy_path () {
-        val contato : Contato = Contato("8184768748" , "diogenes_bot_nex@gmail.com")
-        val endereo : Endereco = Endereco("Pernanmbuco", "Pombos" , "Alto da balança" , "Rua")
+    fun salva_funcionario_happy_path() {
+        val contato: Contato = Contato("8184768748", "diogenes_bot_nex@gmail.com")
+        val endereo: Endereco = Endereco("Pernanmbuco", "Pombos", "Alto da balança", "Rua")
 
 
-        val jpql  = "SELECT h FROM Hotel h WHERE h.id = 1"
-        val hotel : Hotel = entityManager.createQuery(jpql, Hotel::class.java).singleResult
+        val jpql = "SELECT h FROM Hotel h WHERE h.id = 1"
+        val hotel: Hotel = entityManager.createQuery(jpql, Hotel::class.java).singleResult
 
         val funcionario = FuncionarioBuilder()
             .cpf(12485879449)
@@ -70,12 +72,11 @@ class FuncionarioTests {
         val funcionarioLocalizado = funcionarioService.buscarPorCPF(cpf)
 
         assertNotNull(funcionarioLocalizado)
-        assertEquals(funcionarioLocalizado.nome , "Diogenes")
+        assertEquals(funcionarioLocalizado.nome, "Diogenes")
 
 //        println(FuncionarioAssembler.toDto(funcionarioLocalizado))
 
     }
-
 
 
     @Test
@@ -83,7 +84,7 @@ class FuncionarioTests {
         val funcionarioLocalizado = funcionarioService.buscarPorCPF(12485879443)
 
         assertNotNull(funcionarioLocalizado)
-        assertEquals(12485879443 , funcionarioLocalizado.CPF)
+        assertEquals(12485879443, funcionarioLocalizado.CPF)
 
 //        println(FuncionarioAssembler.toDto(funcionarioLocalizado))
 
@@ -103,15 +104,14 @@ class FuncionarioTests {
 
 
 
-        assertEquals(FuncionarioNaoExisteException::class , FuncionarioNaoExisteException::class)
+        assertEquals(FuncionarioNaoExisteException::class, FuncionarioNaoExisteException::class)
 
     }
 
 
-
     @Test
     fun buscar_por_cpf_exceptionCPFInvalido_para_null_ou_incorreto() {
-        val cpf : Long = 87987564
+        val cpf: Long = 87987564
         assertThrows(FuncionarioNaoExisteException::class.java)
         { funcionarioService.buscarPorCPF(12485879450) }
 
@@ -119,21 +119,18 @@ class FuncionarioTests {
     }
 
 
-
-
-
     @Test
     fun buscar_todos_hoteis_dos_funcionarios_criteriaAPi_happyPath() {
-        val criteriaBuilder : CriteriaBuilder = entityManager.criteriaBuilder
-        val criteriaQuery :  CriteriaQuery<Hotel> = criteriaBuilder.createQuery(Hotel::class.java)
-        val root : Root<Funcionario> = criteriaQuery.from(Funcionario::class.java)
+        val criteriaBuilder: CriteriaBuilder = entityManager.criteriaBuilder
+        val criteriaQuery: CriteriaQuery<Hotel> = criteriaBuilder.createQuery(Hotel::class.java)
+        val root: Root<Funcionario> = criteriaQuery.from(Funcionario::class.java)
 
         criteriaQuery.select(root.get("idHotel"))
 
 
-        val TypedQuery : TypedQuery<Hotel> = entityManager.createQuery(criteriaQuery)
+        val TypedQuery: TypedQuery<Hotel> = entityManager.createQuery(criteriaQuery)
 
-        val hoteis : List<Hotel> = TypedQuery.resultList
+        val hoteis: List<Hotel> = TypedQuery.resultList
 
         println(hoteis)
 
@@ -143,10 +140,10 @@ class FuncionarioTests {
 
     @Test
     fun buscar_todos_hoteis_dos_funcionarios_happy_path() {
-        val jpql : String = "SELECT f.idHotel FROM Funcionario f"
-        val typeQuery : TypedQuery<Hotel> = entityManager.createQuery(jpql , Hotel::class.java)
+        val jpql: String = "SELECT f.idHotel FROM Funcionario f"
+        val typeQuery: TypedQuery<Hotel> = entityManager.createQuery(jpql, Hotel::class.java)
 
-        val hotelList : List<Hotel> = typeQuery.resultList
+        val hotelList: List<Hotel> = typeQuery.resultList
 
         println(hotelList)
 
@@ -159,8 +156,8 @@ class FuncionarioTests {
      * um DTO com os dados que utilizaremos.
      */
     @Test
-    fun buscar_hotel_funcionario_happy_path () {
-        val jpql : String  = "SELECT f.nome AS nome, f.idHotel AS hotel FROM Funcionario f"
+    fun buscar_hotel_funcionario_happy_path() {
+        val jpql: String = "SELECT f.nome AS nome, f.idHotel AS hotel FROM Funcionario f"
 
 
         val queryTuple = entityManager.createQuery(jpql, Tuple::class.java)
@@ -194,32 +191,44 @@ class FuncionarioTests {
 
     @Test
     fun testando_predicates_em_consulta_por_nome() {
-        val nome : String = "Di"
-        val builder : CriteriaBuilder = entityManager.criteriaBuilder
-        val query : CriteriaQuery<Funcionario> = builder.createQuery(Funcionario::class.java)
-        val root : Root<Funcionario> = query.from(Funcionario::class.java)
+        val nome: String = "Di"
+        val builder: CriteriaBuilder = entityManager.criteriaBuilder
+        val query: CriteriaQuery<Funcionario> = builder.createQuery(Funcionario::class.java)
+        val root: Root<Funcionario> = query.from(Funcionario::class.java)
         val join = root.fetch<Funcionario, Hotel>("idHotel", JoinType.INNER)
 
 
-        var predicates : MutableList<Predicate> = mutableListOf()
+        var predicates: MutableList<Predicate> = mutableListOf()
         query.select(root)
 
 
         if (nome != null) {
-            predicates.add(builder.like(root.get("nome") , nome+"%"))
+            predicates.add(builder.like(root.get("nome"), nome + "%"))
         }
 
         query.where(*predicates.toTypedArray())
 
 
-        val typeQuery : TypedQuery<Funcionario> = entityManager.createQuery(query)
-        val listaFuncionario : List<Funcionario> = typeQuery.resultList
+        val typeQuery: TypedQuery<Funcionario> = entityManager.createQuery(query)
+        val listaFuncionario: List<Funcionario> = typeQuery.resultList
 
         println(listaFuncionario)
 
 
     }
 
+
+    @Test
+    fun having_metodo_happyPath() {
+        val builder: CriteriaBuilder = entityManager.criteriaBuilder
+        val queryTupl: CriteriaQuery<Tuple> = builder.createTupleQuery()
+        val root: Root<Funcionario> = queryTupl.from(Funcionario::class.java)
+
+
+        //Usar em contexto aonde deve se aplicar , SUM,COUNT,MIN,MAX,ETC.... Depois dos dados agregado com groupBY!
+
+
+    }
 
 
 }

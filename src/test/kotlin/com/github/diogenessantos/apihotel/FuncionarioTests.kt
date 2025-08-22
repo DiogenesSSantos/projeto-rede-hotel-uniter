@@ -219,16 +219,40 @@ class FuncionarioTests {
 
 
     @Test
+    fun case_metodo_happyPath() {
+        val builder: CriteriaBuilder = entityManager.criteriaBuilder
+        val queryTupl: CriteriaQuery<Tuple> = builder.createTupleQuery()
+        val root: Root<Funcionario> = queryTupl.from(Funcionario::class.java)
+
+
+    }
+
+    @Test
     fun having_metodo_happyPath() {
         val builder: CriteriaBuilder = entityManager.criteriaBuilder
         val queryTupl: CriteriaQuery<Tuple> = builder.createTupleQuery()
         val root: Root<Funcionario> = queryTupl.from(Funcionario::class.java)
 
 
-        //Usar em contexto aonde deve se aplicar , SUM,COUNT,MIN,MAX,ETC.... Depois dos dados agregado com groupBY!
+        val caseExp = builder.selectCase<String>()
+            .`when`(
+                builder.like(root.get<String>("nome"), "M%"),
+                "Mãe"
+            )
+            .otherwise(root.get("nome"))
 
+        queryTupl.multiselect(root.get<Long>("CPF"), caseExp)
+
+
+        val list: List<Tuple> = entityManager.createQuery(queryTupl).resultList
+
+        for (tuple in list) {
+            val cpf = tuple.get(0)
+            val nome = tuple.get(1)
+
+            println("CPF : ${cpf} || nome : ${nome}")
+        }
 
     }
-
-
 }
+

@@ -1,9 +1,12 @@
 package com.github.diogenessantos.apihotel.controller
 
-import com.github.diogenessantos.apihotel.repository.hotel.HotelRepository
+import com.github.diogenessantos.apihotel.build.assembler.HotelAssembler
+import com.github.diogenessantos.apihotel.controller.response.HotelResponse
+import com.github.diogenessantos.apihotel.service.HotelService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -16,17 +19,26 @@ import org.springframework.web.bind.annotation.RestController
  * @version 1.0
  */
 @RestController
-@RequestMapping(path = ["/hotel"])
-class HotelController (val hotelRepository: HotelRepository) {
-    
-    
+@RequestMapping(path = ["/hoteis"])
+class HotelController (val service: HotelService, val hotelAssembler: HotelAssembler) {
     
 
+
     @GetMapping
-    fun teste() : ResponseEntity<Any> {
-        return ResponseEntity.status(HttpStatus.OK)
-            .body(hotelRepository.findAll())
+    fun buscarTodos(): ResponseEntity<List<HotelResponse>> {
+       val hoteis = service.buscarTodos()
+       val hoteisResponse = hoteis.map { hotelAssembler.toResponse(it) }
+
+        return ResponseEntity.status(HttpStatus.OK).body(hoteisResponse)
     }
+
+    @GetMapping("/{id}")
+    fun buscarPorId(@PathVariable(name = "id") id : Long) : ResponseEntity<HotelResponse> {
+        val hotel = service.buscarPorId(id)
+        val hotelResponse = hotel.run { hotelAssembler.toResponse(this) }
+        return ResponseEntity.status(HttpStatus.OK).body(hotelResponse)
+    }
+
 
 
 }

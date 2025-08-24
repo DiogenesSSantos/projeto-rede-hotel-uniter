@@ -1,7 +1,7 @@
 package com.github.diogenessantos.apihotel.controller
 
 import com.github.diogenessantos.apihotel.build.assembler.FuncionarioAssembler
-import com.github.diogenessantos.apihotel.controller.DTOS.FuncionarioRequestDTO
+import com.github.diogenessantos.apihotel.controller.request.FuncionarioRequest
 import com.github.diogenessantos.apihotel.model.Funcionario
 import com.github.diogenessantos.apihotel.openapi.documentationfuncionario.FuncionarioDocumentationOpenAPI
 import com.github.diogenessantos.apihotel.repository.funcionario.FuncionarioRepository
@@ -49,7 +49,7 @@ class FuncionarioController(
 
 
     @PostMapping
-    fun salvar(@RequestBody funcionario : FuncionarioRequestDTO) : Funcionario {
+    fun salvar(@RequestBody funcionario : FuncionarioRequest) : Funcionario {
         val funcionarioSalvo = funcionarioRepository.save(funcionarioAssembler.toModel(funcionario))
         return funcionarioSalvo
     }

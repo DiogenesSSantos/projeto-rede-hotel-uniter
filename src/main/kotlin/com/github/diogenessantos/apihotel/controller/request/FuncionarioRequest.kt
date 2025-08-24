@@ -1,9 +1,9 @@
-package com.github.diogenessantos.apihotel.controller.DTOS
+package com.github.diogenessantos.apihotel.controller.request
 
 import com.github.diogenessantos.apihotel.model.Contato
 import com.github.diogenessantos.apihotel.model.Endereco
 
-data class FuncionarioRequestDTO (
+data class FuncionarioRequest (
     val cpf: Long?,
     val nome: String?,
     val login: String?,

@@ -1,5 +1,6 @@
 package com.github.diogenessantos.apihotel.build.assembler
 
+import com.github.diogenessantos.apihotel.controller.request.HotelRequest
 import com.github.diogenessantos.apihotel.controller.response.HotelResponse
 import com.github.diogenessantos.apihotel.model.Hotel
 import com.github.diogenessantos.apihotel.model.dtos.hotelDTO.HotelDTO
@@ -24,5 +25,14 @@ class HotelAssembler {
         }
         return hotelResponse!!
     }
+
+
+    fun toObject(hotelResponse: HotelRequest ): Hotel {
+        val hotel : Hotel = hotelResponse.run {
+            Hotel(null, this.nome, this.categoria , this.contato,this.endereco)
+        }
+        return hotel
+    }
+
 
 }

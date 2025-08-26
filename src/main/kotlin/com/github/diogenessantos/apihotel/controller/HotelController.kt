@@ -2,12 +2,14 @@ package com.github.diogenessantos.apihotel.controller
 
 import com.github.diogenessantos.apihotel.build.assembler.HotelAssembler
 import com.github.diogenessantos.apihotel.controller.request.HotelRequest
+import com.github.diogenessantos.apihotel.controller.request.HotelResquetFiltro
 import com.github.diogenessantos.apihotel.controller.response.HotelResponse
 import com.github.diogenessantos.apihotel.service.HotelService
 import org.apache.coyote.Response
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
@@ -62,6 +64,20 @@ class HotelController (val service: HotelService, val hotelAssembler: HotelAssem
 
         return ResponseEntity.status(HttpStatus.OK).body(hotelResponse)
     }
+
+
+    @PatchMapping("/{id}")
+    fun atualizarParcial(@PathVariable("id") id : Long, @RequestBody
+    hotelResquetFiltro: HotelResquetFiltro) : ResponseEntity<HotelResponse> {
+
+        val hotel = service.atualizarParcial(id, hotelResquetFiltro)
+        val hotelResponse = hotelAssembler.toResponse(hotel)
+
+        return ResponseEntity.status(HttpStatus.OK).body(hotelResponse)
+
+    }
+
+
 
 
 }

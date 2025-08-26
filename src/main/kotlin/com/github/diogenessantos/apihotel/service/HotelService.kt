@@ -59,4 +59,14 @@ class HotelService (private val repository: HotelRepository) {
         return salvar(hotel)
     }
 
+    @Transactional
+    fun deletar(id : Long) {
+        val hotel = repository.findById(id)
+        if (hotel.isPresent) {
+            apply { repository.delete(hotel.get())}
+        }
+    }
+
+
+
 }

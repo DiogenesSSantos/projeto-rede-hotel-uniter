@@ -69,12 +69,8 @@ class HotelService (private val repository: HotelRepository) {
     }
 
 
-    fun buscarTodosFuncionarios(id: Long) : List<Funcionario> {
-        val boolean : Boolean = repository.existsById(id)
-        if (!boolean) {
-            throw HotelNaoLocalizadoException("Hotel com ID[${id}] não existe em nosso banco de dados")
-        }
-        val todosFuncionarioPorIdHotel : List<Funcionario> = repository.buscarFuncionariosHotel(id)
+    fun buscarTodosFuncionarios(hotel : Hotel) : List<Funcionario> {
+        val todosFuncionarioPorIdHotel : List<Funcionario> = repository.buscarFuncionariosHotel(hotel.id!!)
         return todosFuncionarioPorIdHotel
     }
 

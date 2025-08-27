@@ -90,13 +90,13 @@ class HotelController(val service: HotelService, val hotelAssembler: HotelAssemb
     }
 
 
-    //Todo refatorá para receber como parâmetros buscarTodosFuncionarios o hotel direto implementar também o retorno
-    // do funcionarioResponse sem dados desnecessário.
+
     @GetMapping("/{id}/funcionarios")
     fun buscarTodosFuncionarios(@PathVariable("id") id: Long): ResponseEntity<Any?>? {
         val hotel = service.buscarPorId(id)
-        val todosFuncionariosHotel = service.buscarTodosFuncionarios(id)
+        val todosFuncionariosHotel = service.buscarTodosFuncionarios(hotel)
         val hotelFuncionarioResponse = hotelAssembler.toHotelFuncionarioResponse(hotel, todosFuncionariosHotel)
+
         return ResponseEntity.status(HttpStatus.OK).body(hotelFuncionarioResponse)
     }
 

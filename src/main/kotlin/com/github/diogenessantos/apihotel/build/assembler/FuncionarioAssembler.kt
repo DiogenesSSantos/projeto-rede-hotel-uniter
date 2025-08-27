@@ -2,6 +2,7 @@ package com.github.diogenessantos.apihotel.build.assembler
 
 import com.github.diogenessantos.apihotel.build.model.FuncionarioBuilder
 import com.github.diogenessantos.apihotel.controller.request.FuncionarioRequest
+import com.github.diogenessantos.apihotel.controller.response.FuncionarioResponse
 import com.github.diogenessantos.apihotel.model.Funcionario
 import com.github.diogenessantos.apihotel.model.Hotel
 import com.github.diogenessantos.apihotel.model.dtos.funcionarioDTO.FuncionarioDTO
@@ -9,7 +10,9 @@ import com.github.diogenessantos.apihotel.service.HotelService
 import org.springframework.stereotype.Component
 
 @Component
-class FuncionarioAssembler(private val hotelService: HotelService , private val hotelAssembler: HotelAssembler) {
+class FuncionarioAssembler(private val hotelService: HotelService ) {
+
+        lateinit  private var hotelAssembler: HotelAssembler
 
 
         fun toDto(funcionario : Funcionario) : FuncionarioDTO {
@@ -38,6 +41,18 @@ class FuncionarioAssembler(private val hotelService: HotelService , private val 
 
         }
 
+
+    fun toResponse(funcionario : Funcionario) : FuncionarioResponse {
+        val response = FuncionarioResponse(funcionario.CPF , funcionario.nome
+            , funcionario.contato , funcionario.endereco)
+        return response
+    }
+
+
+    fun listToResponses(listaFuncionario : List<Funcionario>): List<FuncionarioResponse> {
+        val listaResponse = listaFuncionario.map { toResponse(it) }
+        return listaResponse
+    }
 
 
 

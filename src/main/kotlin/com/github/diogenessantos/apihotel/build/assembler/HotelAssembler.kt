@@ -9,39 +9,40 @@ import com.github.diogenessantos.apihotel.model.dtos.hotelDTO.HotelDTO
 import org.springframework.stereotype.Component
 
 @Component
-class HotelAssembler {
+class HotelAssembler(private val funcionarioAssembler: FuncionarioAssembler) {
 
-        fun toDTO(hotel: Hotel): HotelDTO {
-            hotel?.let {
+    fun toDTO(hotel: Hotel): HotelDTO {
+        hotel?.let {
 
-                return HotelDTO(hotel.nome, hotel.categoria, hotel.endereco)
-            }
-            return HotelDTO(null, null, null)
+            return HotelDTO(hotel.nome, hotel.categoria, hotel.endereco)
         }
+        return HotelDTO(null, null, null)
+    }
 
 
-
-    fun toResponse(hotel: Hotel) : HotelResponse {
-        val hotelResponse : HotelResponse? = hotel?.run {
+    fun toResponse(hotel: Hotel): HotelResponse {
+        val hotelResponse: HotelResponse? = hotel?.run {
             HotelResponse(hotel.id!!, hotel.nome, hotel.categoria, hotel.contato, hotel.endereco)
         }
         return hotelResponse!!
     }
 
 
-    fun toObject(hotelResponse: HotelRequest ): Hotel {
-        val hotel : Hotel = hotelResponse.run {
-            Hotel(null, this.nome, this.categoria , this.contato,this.endereco)
+    fun toObject(hotelResponse: HotelRequest): Hotel {
+        val hotel: Hotel = hotelResponse.run {
+            Hotel(null, this.nome, this.categoria, this.contato, this.endereco)
         }
         return hotel
     }
 
 
-    fun toHotelFuncionarioResponse(hotel: Hotel , listaFuncionarioHotel : List<Funcionario>) : HotelFuncionarioResponse {
+    fun toHotelFuncionarioResponse(hotel: Hotel, listaFuncionarioHotel: List<Funcionario>): HotelFuncionarioResponse {
         if (listaFuncionarioHotel.isEmpty()) {
-            return HotelFuncionarioResponse("" , emptyList());
+            return HotelFuncionarioResponse("", emptyList());
         }
-        return HotelFuncionarioResponse(hotel.nome , listaFuncionarioHotel)
+
+        return HotelFuncionarioResponse(hotel.nome,
+            funcionarioAssembler.listToResponses(listaFuncionarioHotel))
 
     }
 

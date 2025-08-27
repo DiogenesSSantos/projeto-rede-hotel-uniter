@@ -3,6 +3,7 @@ package com.github.diogenessantos.apihotel.service
 import com.github.diogenessantos.apihotel.controller.request.HotelRequest
 import com.github.diogenessantos.apihotel.controller.request.HotelResquetFiltro
 import com.github.diogenessantos.apihotel.exceptionhandller.exceptionhotel.HotelNaoLocalizadoException
+import com.github.diogenessantos.apihotel.model.Funcionario
 import com.github.diogenessantos.apihotel.model.Hotel
 import com.github.diogenessantos.apihotel.repository.hotel.HotelRepository
 import jakarta.transaction.Transactional
@@ -68,5 +69,13 @@ class HotelService (private val repository: HotelRepository) {
     }
 
 
+    fun buscarTodosFuncionarios(id: Long) : List<Funcionario> {
+        val boolean : Boolean = repository.existsById(id)
+        if (!boolean) {
+            throw HotelNaoLocalizadoException("Hotel com ID[${id}] não existe em nosso banco de dados")
+        }
+        val todosFuncionarioPorIdHotel : List<Funcionario> = repository.buscarFuncionariosHotel(id)
+        return todosFuncionarioPorIdHotel
+    }
 
 }

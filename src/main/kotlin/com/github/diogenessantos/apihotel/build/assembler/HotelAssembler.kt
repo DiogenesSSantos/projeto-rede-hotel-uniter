@@ -1,7 +1,9 @@
 package com.github.diogenessantos.apihotel.build.assembler
 
 import com.github.diogenessantos.apihotel.controller.request.HotelRequest
+import com.github.diogenessantos.apihotel.controller.response.HotelFuncionarioResponse
 import com.github.diogenessantos.apihotel.controller.response.HotelResponse
+import com.github.diogenessantos.apihotel.model.Funcionario
 import com.github.diogenessantos.apihotel.model.Hotel
 import com.github.diogenessantos.apihotel.model.dtos.hotelDTO.HotelDTO
 import org.springframework.stereotype.Component
@@ -32,6 +34,15 @@ class HotelAssembler {
             Hotel(null, this.nome, this.categoria , this.contato,this.endereco)
         }
         return hotel
+    }
+
+
+    fun toHotelFuncionarioResponse(hotel: Hotel , listaFuncionarioHotel : List<Funcionario>) : HotelFuncionarioResponse {
+        if (listaFuncionarioHotel.isEmpty()) {
+            return HotelFuncionarioResponse("" , emptyList());
+        }
+        return HotelFuncionarioResponse(hotel.nome , listaFuncionarioHotel)
+
     }
 
 

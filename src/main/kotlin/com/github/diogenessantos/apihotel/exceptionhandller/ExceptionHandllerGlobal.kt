@@ -1,6 +1,7 @@
 package com.github.diogenessantos.apihotel.exceptionhandller
 
 import com.github.diogenessantos.apihotel.exceptionhandller.exceptionfuncionario.CPFinvalidoException
+import com.github.diogenessantos.apihotel.exceptionhandller.exceptionfuncionario.FuncionarioNaoExisteException
 import com.github.diogenessantos.apihotel.exceptionhandller.exceptionhotel.HotelNaoLocalizadoException
 import com.github.diogenessantos.apihotel.exceptionhandller.model.Problem
 import jakarta.servlet.http.HttpServletRequest
@@ -62,6 +63,22 @@ class ExceptionHandllerGlobal {
             "Dado não existente no banco de dados.",
             LocalDateTime.now(),
             HotelNaoLocalizadoException::class.toString()
+        )
+
+        return ResponseEntity(problem, HttpStatus.BAD_REQUEST)
+    }
+
+
+    @ExceptionHandler(FuncionarioNaoExisteException::class)
+    fun HotelNaoLocalizadoException(ex : FuncionarioNaoExisteException,
+                                    request: HttpServletRequest) : ResponseEntity<Any>? {
+
+
+        val problem = Problem(
+            HttpStatus.BAD_REQUEST.value(), ex.message!!,
+            "Dado não existente no banco de dados.",
+            LocalDateTime.now(),
+            FuncionarioNaoExisteException::class.toString()
         )
 
         return ResponseEntity(problem, HttpStatus.BAD_REQUEST)

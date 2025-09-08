@@ -1,15 +1,21 @@
 package com.github.diogenessantos.apihotel.build.assembler
 
 import com.github.diogenessantos.apihotel.controller.request.HotelRequest
-import com.github.diogenessantos.apihotel.controller.response.HotelFuncionarioResponse
-import com.github.diogenessantos.apihotel.controller.response.HotelResponse
+import com.github.diogenessantos.apihotel.controller.response.hotelresponses.HotelFuncionarioResponse
+import com.github.diogenessantos.apihotel.controller.response.hotelresponses.HotelQuartosResponse
+import com.github.diogenessantos.apihotel.controller.response.hotelresponses.HotelResponse
 import com.github.diogenessantos.apihotel.model.Funcionario
 import com.github.diogenessantos.apihotel.model.Hotel
+import com.github.diogenessantos.apihotel.model.Quarto
 import com.github.diogenessantos.apihotel.model.dtos.hotelDTO.HotelDTO
 import org.springframework.stereotype.Component
 
 @Component
 class HotelAssembler(private val funcionarioAssembler: FuncionarioAssembler) {
+
+
+
+
 
     fun toDTO(hotel: Hotel): HotelDTO {
         hotel?.let {
@@ -43,6 +49,14 @@ class HotelAssembler(private val funcionarioAssembler: FuncionarioAssembler) {
 
         return HotelFuncionarioResponse(hotel.nome,
             funcionarioAssembler.listToResponses(listaFuncionarioHotel))
+
+    }
+
+
+
+
+    fun toHotelQuartoResponse(hotel: Hotel, listaFuncionarioHotel: List<Quarto>) : HotelQuartosResponse {
+        return HotelQuartosResponse( hotel.nome , listaFuncionarioHotel)
 
     }
 

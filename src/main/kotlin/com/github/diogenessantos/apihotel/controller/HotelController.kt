@@ -3,10 +3,10 @@ package com.github.diogenessantos.apihotel.controller
 import com.github.diogenessantos.apihotel.build.assembler.HotelAssembler
 import com.github.diogenessantos.apihotel.controller.request.HotelRequest
 import com.github.diogenessantos.apihotel.controller.request.HotelResquetFiltro
-import com.github.diogenessantos.apihotel.controller.response.FuncionarioResponse
-import com.github.diogenessantos.apihotel.controller.response.HotelResponse
+import com.github.diogenessantos.apihotel.controller.response.hotelresponses.HotelFuncionarioResponse
+import com.github.diogenessantos.apihotel.controller.response.hotelresponses.HotelResponse
+import com.github.diogenessantos.apihotel.openapi.documentationhotel.HotelDocumentationOpenAPI
 import com.github.diogenessantos.apihotel.service.HotelService
-import org.apache.coyote.Response
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -28,11 +28,11 @@ import org.springframework.web.bind.annotation.RestController
  */
 @RestController
 @RequestMapping(path = ["/hoteis"])
-class HotelController(val service: HotelService, val hotelAssembler: HotelAssembler) {
+class HotelController(val service: HotelService, val hotelAssembler: HotelAssembler) : HotelDocumentationOpenAPI() {
 
 
     @GetMapping
-    fun buscarTodos(): ResponseEntity<List<HotelResponse>> {
+    override fun buscarTodos(): ResponseEntity<List<HotelResponse>> {
         val hoteis = service.buscarTodos()
         val hoteisResponse = hoteis.map { hotelAssembler.toResponse(it) }
 
@@ -40,7 +40,7 @@ class HotelController(val service: HotelService, val hotelAssembler: HotelAssemb
     }
 
     @GetMapping("/{id}")
-    fun buscarPorId(@PathVariable(name = "id") id: Long): ResponseEntity<HotelResponse> {
+    override fun buscarPorId(@PathVariable(name = "id") id: Long): ResponseEntity<HotelResponse> {
         val hotel = service.buscarPorId(id)
         val hotelResponse = hotel.run { hotelAssembler.toResponse(this) }
         return ResponseEntity.status(HttpStatus.OK).body(hotelResponse)
@@ -58,7 +58,7 @@ class HotelController(val service: HotelService, val hotelAssembler: HotelAssemb
 
 
     @PutMapping("/{id}")
-    fun atualizar(
+    override fun atualizar(
         @PathVariable("id") id: Long,
         @RequestBody hotelRequest: HotelRequest
     ): ResponseEntity<HotelResponse> {
@@ -92,13 +92,23 @@ class HotelController(val service: HotelService, val hotelAssembler: HotelAssemb
 
 
     @GetMapping("/{id}/funcionarios")
-    fun buscarTodosFuncionarios(@PathVariable("id") id: Long): ResponseEntity<Any?>? {
+    fun buscarTodosFuncionarios(@PathVariable("id") id: Long): ResponseEntity<HotelFuncionarioResponse> {
         val hotel = service.buscarPorId(id)
-        val todosFuncionariosHotel = service.buscarTodosFuncionarios(hotel)
-        val hotelFuncionarioResponse = hotelAssembler.toHotelFuncionarioResponse(hotel, todosFuncionariosHotel)
+        val todosFuncionarios = service.buscarTodosFuncionarios(hotel)
+        val hotelFuncionarioResponse = hotelAssembler.toHotelFuncionarioResponse(hotel, todosFuncionarios)
 
         return ResponseEntity.status(HttpStatus.OK).body(hotelFuncionarioResponse)
     }
+
+    @GetMapping("/{id}/quartos")
+    fun buscarTodosQuartos(@PathVariable("id") id: Long): ResponseEntity<Any?>? {
+        val hotel = service.buscarPorId(id)
+        val todosQuartos = service.buscarTodosQuartos(hotel)
+        val hotelQuartosResponse = hotelAssembler.toHotelQuartoResponse(hotel,todosQuartos)
+
+        return ResponseEntity.status(HttpStatus.OK).body(hotelQuartosResponse)
+    }
+
 
 
 }

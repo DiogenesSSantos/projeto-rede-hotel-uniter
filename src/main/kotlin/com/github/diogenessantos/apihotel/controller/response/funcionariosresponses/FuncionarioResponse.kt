@@ -1,4 +1,4 @@
-package com.github.diogenessantos.apihotel.controller.response
+package com.github.diogenessantos.apihotel.controller.response.funcionariosresponses
 
 import com.github.diogenessantos.apihotel.model.Contato
 import com.github.diogenessantos.apihotel.model.Endereco

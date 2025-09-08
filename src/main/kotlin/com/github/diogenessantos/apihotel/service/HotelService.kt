@@ -5,6 +5,7 @@ import com.github.diogenessantos.apihotel.controller.request.HotelResquetFiltro
 import com.github.diogenessantos.apihotel.exceptionhandller.exceptionhotel.HotelNaoLocalizadoException
 import com.github.diogenessantos.apihotel.model.Funcionario
 import com.github.diogenessantos.apihotel.model.Hotel
+import com.github.diogenessantos.apihotel.model.Quarto
 import com.github.diogenessantos.apihotel.repository.hotel.HotelRepository
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
@@ -68,10 +69,20 @@ class HotelService (private val repository: HotelRepository) {
         }
     }
 
-
+    @Transactional
     fun buscarTodosFuncionarios(hotel : Hotel) : List<Funcionario> {
-        val todosFuncionarioPorIdHotel : List<Funcionario> = repository.buscarFuncionariosHotel(hotel.id!!)
+        val todosFuncionarioPorIdHotel : List<Funcionario> = repository.buscarFuncionarios(hotel.id!!)
         return todosFuncionarioPorIdHotel
     }
+
+
+
+    @Transactional
+    fun buscarTodosQuartos(hotel : Hotel): List<Quarto>{
+        val todosQuartoPorId = repository.buscarTodosQuartos(hotel.id!!)
+
+        return todosQuartoPorId
+    }
+
 
 }

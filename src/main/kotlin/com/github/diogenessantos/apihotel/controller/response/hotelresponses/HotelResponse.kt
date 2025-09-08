@@ -1,8 +1,7 @@
-package com.github.diogenessantos.apihotel.controller.response
+package com.github.diogenessantos.apihotel.controller.response.hotelresponses
 
 import com.github.diogenessantos.apihotel.model.Contato
 import com.github.diogenessantos.apihotel.model.Endereco
-import jakarta.persistence.Embedded
 
 data class HotelResponse(
     val id: Long,
@@ -12,4 +11,3 @@ data class HotelResponse(
     val endereco: Endereco
 
 ) {}
-

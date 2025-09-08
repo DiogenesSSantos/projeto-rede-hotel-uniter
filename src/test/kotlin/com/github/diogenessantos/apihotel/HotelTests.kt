@@ -2,6 +2,7 @@ package com.github.diogenessantos.apihotel
 
 import com.github.diogenessantos.apihotel.model.Funcionario
 import com.github.diogenessantos.apihotel.model.Hotel
+import com.github.diogenessantos.apihotel.service.HotelService
 import jakarta.persistence.EntityManager
 import jakarta.persistence.TypedQuery
 import jakarta.persistence.criteria.CriteriaBuilder
@@ -12,6 +13,8 @@ import org.hibernate.query.Query
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import kotlin.test.assertFalse
+import kotlin.test.assertNotNull
 
 
 @SpringBootTest
@@ -20,6 +23,8 @@ class HotelTests {
     @Autowired
     lateinit var entityManager: EntityManager
 
+    @Autowired
+    lateinit var hotelService: HotelService
 
 
     @Test
@@ -69,6 +74,17 @@ class HotelTests {
     }
 
 
+//    @Test
+//    fun buscar_quarto_por_id_Hotel_happyPath() {
+//        val id : Long = 1
+//        val hotel =hotelService.buscarPorId(id)
+//        val listaQuartoPorIdHotel =  hotelService.buscarTodosQuartos(hotel)
+//
+//
+//        assertNotNull(listaQuartoPorIdHotel)
+//        assertFalse(listaQuartoPorIdHotel.isEmpty())
+//
+//    }
 
 
 

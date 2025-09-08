@@ -15,4 +15,7 @@ interface FuncionarioRepositoryCustom {
     @Transactional
     fun buscarPorCPF (cpf : Long ) : Funcionario
 
+
+    fun buscarPorIdHotel(idHotel : Long) : List<Funcionario>
+
 }

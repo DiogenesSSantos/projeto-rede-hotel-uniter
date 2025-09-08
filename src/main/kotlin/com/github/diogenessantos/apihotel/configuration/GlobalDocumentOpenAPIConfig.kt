@@ -62,7 +62,7 @@ class GlobalDocumentOpenAPIConfig {
         return GroupedOpenApi
             .builder()
             .group("Hotel-Controller")
-            .pathsToMatch("/hotel/**")
+            .pathsToMatch("/hoteis/**")
             .build()
     }
 

@@ -231,4 +231,17 @@ class FuncionarioTests {
     }
 
 
+    @Test
+    fun buscar_Funcionarios_Por_Id_Hotel() {
+        val idHotel : Long = 2
+
+        val listaFuncionariosHotel : List<Funcionario> = funcionarioService.buscarFuncionarioPorIdHotel(idHotel)
+
+        assertNotNull(listaFuncionariosHotel)
+        for (funcionario in listaFuncionariosHotel) {
+            println("nome funcionario ${funcionario.nome} || hotel : ${funcionario.idHotel!!.nome}")
+        }
+
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.github.diogenessantos.apihotel.model
 
+import com.github.diogenessantos.apihotel.validator.MenorDeIdade
 import jakarta.persistence.Embedded
 import jakarta.persistence.Entity
 import jakarta.persistence.Id

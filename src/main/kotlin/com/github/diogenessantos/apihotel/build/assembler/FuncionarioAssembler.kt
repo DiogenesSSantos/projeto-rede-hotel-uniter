@@ -19,7 +19,7 @@ class FuncionarioAssembler(private val hotelService: HotelService ) {
         lateinit  private var hotelAssembler: HotelAssembler
 
 
-        fun toDto(funcionario : Funcionario) : FuncionarioDTO {
+        fun toDto(funcionario: Funcionario?) : FuncionarioDTO {
 
             funcionario?.let {
                 return FuncionarioDTO(funcionario.nome, hotelAssembler.toDTO(funcionario.idHotel!!))
@@ -29,16 +29,17 @@ class FuncionarioAssembler(private val hotelService: HotelService ) {
 
 
         fun toModel(funcionarioRequest : FuncionarioRequest) : Funcionario {
-            val hotel : Hotel = hotelService.buscarPorId(funcionarioRequest.idHotel!!)
+
+            val hotel : Hotel = hotelService.buscarPorId(funcionarioRequest.idHotel)
 
             val funcionarioBuilder = FuncionarioBuilder()
-                .cpf(funcionarioRequest.cpf!!)
-                .nome(funcionarioRequest.nome!!)
-                .contato(funcionarioRequest.contato!!)
-                .endereco(funcionarioRequest.endereco!!)
+                .cpf(funcionarioRequest.cpf)
+                .nome(funcionarioRequest.nome)
+                .contato(funcionarioRequest.contato)
+                .endereco(funcionarioRequest.endereco)
                 .hotel(hotel)
-                .senha(funcionarioRequest.senha!!)
-                .login(funcionarioRequest.login!!)
+                .senha(funcionarioRequest.senha)
+                .login(funcionarioRequest.login)
                 .build()
 
             return funcionarioBuilder

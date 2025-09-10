@@ -1,6 +1,7 @@
 package com.github.diogenessantos.apihotel.exceptionhandller
 
 import com.github.diogenessantos.apihotel.exceptionhandller.exceptionfuncionario.CPFinvalidoException
+import com.github.diogenessantos.apihotel.exceptionhandller.exceptionfuncionario.FuncionarioJaCadastroException
 import com.github.diogenessantos.apihotel.exceptionhandller.exceptionfuncionario.FuncionarioNaoExisteException
 import com.github.diogenessantos.apihotel.exceptionhandller.exceptionhotel.HotelNaoLocalizadoException
 import com.github.diogenessantos.apihotel.exceptionhandller.model.Problem
@@ -85,6 +86,21 @@ class ExceptionHandllerGlobal {
     }
 
 
+
+    @ExceptionHandler(FuncionarioJaCadastroException::class)
+    fun HotelNaoLocalizadoException(ex : FuncionarioJaCadastroException,
+                                    request: HttpServletRequest) : ResponseEntity<Any>? {
+
+
+        val problem = Problem(
+            HttpStatus.BAD_REQUEST.value(), ex.message!!,
+            "CPF JÁ CADASTRADO.",
+            LocalDateTime.now(),
+            FuncionarioJaCadastroException::class.toString()
+        )
+
+        return ResponseEntity(problem, HttpStatus.BAD_REQUEST)
+    }
 
 
 }

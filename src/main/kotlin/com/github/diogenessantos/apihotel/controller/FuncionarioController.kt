@@ -3,15 +3,18 @@ package com.github.diogenessantos.apihotel.controller
 import com.github.diogenessantos.apihotel.build.assembler.FuncionarioAssembler
 import com.github.diogenessantos.apihotel.controller.request.FuncionarioRequest
 import com.github.diogenessantos.apihotel.model.Funcionario
+import com.github.diogenessantos.apihotel.model.dtos.funcionarioDTO.FuncionarioDTO
 import com.github.diogenessantos.apihotel.openapi.documentationfuncionario.FuncionarioDocumentationOpenAPI
-import com.github.diogenessantos.apihotel.repository.funcionario.FuncionarioRepository
 import com.github.diogenessantos.apihotel.service.FuncionarioService
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -27,7 +30,6 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping(path = ["/funcionario"])
 class FuncionarioController(
-    val funcionarioRepository: FuncionarioRepository,
     val funcionarioAssembler: FuncionarioAssembler,
     private val  funcionarioservice : FuncionarioService
 ) :
@@ -36,7 +38,7 @@ class FuncionarioController(
 
     @GetMapping
     override fun buscarTodos(@PageableDefault(page = 0, size = 5) pageable: Pageable): ResponseEntity<Any>? {
-        val funcionarioDTOS = funcionarioRepository.findAll(pageable).map { funcionarioAssembler.toDto(it) }
+        val funcionarioDTOS: Page<FuncionarioDTO?> = funcionarioservice.buscarTodos(pageable).map { funcionarioAssembler.toDto(it) }
         return ResponseEntity.ok(funcionarioDTOS)
 
     }
@@ -45,7 +47,7 @@ class FuncionarioController(
     @GetMapping("/buscarpornome")
     override  fun buscarPorNome(@RequestParam("nome") nome: String, @PageableDefault(page = 0, size = 5) pageable: Pageable): ResponseEntity<Any>? {
 
-        val funcionarioDTOS = funcionarioRepository.buscarPorNome(nome , pageable).map { funcionarioAssembler.toDto(it) }
+        val funcionarioDTOS = funcionarioservice.buscarPorNome(nome , pageable).map { funcionarioAssembler.toDto(it) }
         return ResponseEntity.ok(funcionarioDTOS)
 
     }
@@ -53,7 +55,7 @@ class FuncionarioController(
 
     @GetMapping("/buscarporcpf")
     fun buscarPorCpf(@RequestParam("cpf") cpf : Long) : ResponseEntity<Any?>? {
-        val funcionarioLocalizado = funcionarioRepository.buscarPorCPF(cpf)
+        val funcionarioLocalizado = funcionarioservice.buscarPorCPF(cpf)
         return ResponseEntity.ok().body(funcionarioLocalizado)
     }
 
@@ -69,10 +71,21 @@ class FuncionarioController(
     }
 
 
+    @PutMapping
+    fun atualizarCompleto(@RequestBody funcionarioRequest : FuncionarioRequest) : Funcionario {
+        return funcionarioservice.atualizacaoCompleta(funcionarioAssembler.toModel(funcionarioRequest))
+
+    }
+
+    @PatchMapping
+    fun atualizarParcial(@RequestBody funcionarioRequest: FuncionarioRequest) {
+
+    }
+
 
     @PostMapping
     fun salvar(@RequestBody funcionario : FuncionarioRequest) : Funcionario {
-        val funcionarioSalvo = funcionarioRepository.save(funcionarioAssembler.toModel(funcionario))
+        val funcionarioSalvo = funcionarioservice.salvar(funcionarioAssembler.toModel(funcionario))
         return funcionarioSalvo
     }
 

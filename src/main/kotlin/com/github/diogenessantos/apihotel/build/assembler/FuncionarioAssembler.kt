@@ -2,6 +2,7 @@ package com.github.diogenessantos.apihotel.build.assembler
 
 import com.github.diogenessantos.apihotel.build.model.FuncionarioBuilder
 import com.github.diogenessantos.apihotel.controller.request.FuncionarioRequest
+import com.github.diogenessantos.apihotel.controller.request.FuncionarioRequestParcial
 import com.github.diogenessantos.apihotel.controller.response.funcionariosresponses.FuncionarioResponse
 import com.github.diogenessantos.apihotel.model.Funcionario
 import com.github.diogenessantos.apihotel.model.Hotel
@@ -59,6 +60,15 @@ class FuncionarioAssembler(private val hotelService: HotelService ) {
         return listaResponse
     }
 
+
+    fun atualizarfuncionarioParcialToModel(funcionarioModel : Funcionario , funcionarioRequestParcial: FuncionarioRequestParcial)  {
+        funcionarioRequestParcial.nome?.let {funcionarioModel.nome = it }
+        funcionarioRequestParcial.login?.let {funcionarioModel.login = it}
+        funcionarioRequestParcial.senha?.let {funcionarioModel.senha = it}
+        funcionarioRequestParcial.contato?.let {funcionarioModel.contato = it}
+        funcionarioRequestParcial.endereco?.let {funcionarioModel.endereco = it}
+
+    }
 
 
 }

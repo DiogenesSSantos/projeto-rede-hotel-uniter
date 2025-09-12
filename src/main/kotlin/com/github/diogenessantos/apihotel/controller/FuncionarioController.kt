@@ -2,6 +2,7 @@ package com.github.diogenessantos.apihotel.controller
 
 import com.github.diogenessantos.apihotel.build.assembler.FuncionarioAssembler
 import com.github.diogenessantos.apihotel.controller.request.FuncionarioRequest
+import com.github.diogenessantos.apihotel.controller.request.FuncionarioRequestParcial
 import com.github.diogenessantos.apihotel.model.Funcionario
 import com.github.diogenessantos.apihotel.model.dtos.funcionarioDTO.FuncionarioDTO
 import com.github.diogenessantos.apihotel.openapi.documentationfuncionario.FuncionarioDocumentationOpenAPI
@@ -9,7 +10,9 @@ import com.github.diogenessantos.apihotel.service.FuncionarioService
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -18,6 +21,8 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 
 
@@ -77,16 +82,35 @@ class FuncionarioController(
 
     }
 
-    @PatchMapping
-    fun atualizarParcial(@RequestBody funcionarioRequest: FuncionarioRequest) {
 
+    @PatchMapping("/{cpf}")
+    fun atualizarParcial(@PathVariable("cpf") cpf: Long,
+                         @RequestBody funcionarioRequest: FuncionarioRequestParcial) : ResponseEntity<Any?> {
+        val funcionario = funcionarioservice.atualizarParcial(cpf, funcionarioRequest)
+
+        return ResponseEntity.ok().body(funcionario)
     }
+
+    @PatchMapping("/{cpf}/{idHotel}")
+    fun atualizarHotel(@PathVariable("cpf") cpf: Long,
+                         @PathVariable("idHotel") idHotel: Long) : ResponseEntity<Any?> {
+        val funcionario = funcionarioservice.atualizarHotel(cpf, idHotel)
+
+        return ResponseEntity.ok().body(funcionario)
+    }
+
 
 
     @PostMapping
     fun salvar(@RequestBody funcionario : FuncionarioRequest) : Funcionario {
         val funcionarioSalvo = funcionarioservice.salvar(funcionarioAssembler.toModel(funcionario))
         return funcionarioSalvo
+    }
+
+    @DeleteMapping("/{cpf}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deletar(@PathVariable("cpf") cpf : Long) {
+        funcionarioservice.deletar(cpf)
     }
 
 

@@ -1,13 +1,18 @@
 package com.github.diogenessantos.apihotel.exceptionhandller
 
+import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import com.github.diogenessantos.apihotel.exceptionhandller.exceptionfuncionario.CPFinvalidoException
 import com.github.diogenessantos.apihotel.exceptionhandller.exceptionfuncionario.FuncionarioJaCadastroException
 import com.github.diogenessantos.apihotel.exceptionhandller.exceptionfuncionario.FuncionarioNaoExisteException
 import com.github.diogenessantos.apihotel.exceptionhandller.exceptionhotel.HotelNaoLocalizadoException
+import com.github.diogenessantos.apihotel.exceptionhandller.model.CampoInvalidoBeanValidation
 import com.github.diogenessantos.apihotel.exceptionhandller.model.Problem
+import com.github.diogenessantos.apihotel.exceptionhandller.model.ProblemBeanValidation
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.http.converter.HttpMessageNotReadableException
+import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.MissingServletRequestParameterException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -71,7 +76,7 @@ class ExceptionHandllerGlobal {
 
 
     @ExceptionHandler(FuncionarioNaoExisteException::class)
-    fun HotelNaoLocalizadoException(ex : FuncionarioNaoExisteException,
+    fun FuncionarioNaoExisteException(ex : FuncionarioNaoExisteException,
                                     request: HttpServletRequest) : ResponseEntity<Any>? {
 
 
@@ -88,7 +93,7 @@ class ExceptionHandllerGlobal {
 
 
     @ExceptionHandler(FuncionarioJaCadastroException::class)
-    fun HotelNaoLocalizadoException(ex : FuncionarioJaCadastroException,
+    fun FuncionarioJaCadastroException(ex : FuncionarioJaCadastroException,
                                     request: HttpServletRequest) : ResponseEntity<Any>? {
 
 
@@ -100,6 +105,50 @@ class ExceptionHandllerGlobal {
         )
 
         return ResponseEntity(problem, HttpStatus.BAD_REQUEST)
+    }
+
+
+    @ExceptionHandler(HttpMessageNotReadableException::class)
+    fun HttpMessageNotReadableException(ex : HttpMessageNotReadableException , request: HttpServletRequest) : ResponseEntity<Any?>{
+
+        val cause = ex.cause
+        val missingField = if (cause is MismatchedInputException) {
+            cause.path.first()
+        } else {
+            null
+        }
+
+        val problem = Problem(
+            HttpStatus.BAD_REQUEST.value(),
+            "  O campo chamado [${missingField?.fieldName?:"CAMPO VÁZIO"}] " +
+                    "não está valido leia a documentação para saber mais detalhes. ",
+            "CAMPO INVÁLIDO.",
+            LocalDateTime.now(),
+            HttpMessageNotReadableException::class.toString()
+        )
+
+        return ResponseEntity.ok().body(problem)
+
+    }
+
+
+    @ExceptionHandler(MethodArgumentNotValidException::class)
+    fun MethodArgumentNotValidException(ex: MethodArgumentNotValidException): ResponseEntity<Any?> {
+        val errors: List<CampoInvalidoBeanValidation> = ex.bindingResult.fieldErrors.map{ fe ->
+            CampoInvalidoBeanValidation(fe.field, fe.defaultMessage ?: "Valor inválido" )
+        }
+
+        val problem = ProblemBeanValidation(
+            HttpStatus.BAD_REQUEST.value(),
+            ex.message!!,
+            "CAMPOS INVÁLIDOS.",
+            LocalDateTime.now(),
+            MethodArgumentNotValidException::class.toString(),
+            errors,
+        )
+
+
+        return ResponseEntity.badRequest().body(problem)
     }
 
 

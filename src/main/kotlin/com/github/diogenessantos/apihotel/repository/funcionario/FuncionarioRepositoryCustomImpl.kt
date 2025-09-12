@@ -63,14 +63,12 @@ class FuncionarioRepositoryCustomImpl(val entityManage: EntityManager) : Funcion
 
     @Transactional
     override fun buscarPorCPF(cpf: Long): Funcionario {
-        if (cpf == null) {
-            throw CPFinvalidoException()
-        }
 
         try {
             val criteriaBuilder: CriteriaBuilder = entityManage.criteriaBuilder
             val funcionarioQuery: CriteriaQuery<Funcionario> = criteriaBuilder.createQuery(Funcionario::class.java)
             val root: Root<Funcionario> = funcionarioQuery.from(Funcionario::class.java)
+            root.fetch<Funcionario, Hotel>("idHotel", JoinType.INNER)
 
             funcionarioQuery.select(root)
 

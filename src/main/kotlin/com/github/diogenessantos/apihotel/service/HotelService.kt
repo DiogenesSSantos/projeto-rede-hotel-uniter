@@ -13,30 +13,31 @@ import kotlin.jvm.optionals.getOrElse
 
 
 @Service
-class HotelService (private val repository: HotelRepository) {
+class HotelService(private val repository: HotelRepository) {
 
 
     @Transactional
-    fun buscarPorId (id : Long) : Hotel {
+    fun buscarPorId(id: Long): Hotel {
         val hotelLocalizado = repository.findById(id).getOrElse {
-            throw HotelNaoLocalizadoException("Hotel com ID[${id}] não existe em nosso banco de dados") }
+            throw HotelNaoLocalizadoException("Hotel com ID[${id}] não existe em nosso banco de dados")
+        }
         return hotelLocalizado
 
     }
 
     @Transactional
-    fun buscarTodos() : List<Hotel> {
+    fun buscarTodos(): List<Hotel> {
         return repository.findAll()
     }
 
     @Transactional
-    fun salvar(hotel : Hotel) : Hotel {
+    fun salvar(hotel: Hotel): Hotel {
         return repository.save(hotel)
     }
 
 
     @Transactional
-    fun atualizarPorCompleto(id : Long , hotelRequest: HotelRequest) : Hotel {
+    fun atualizarPorCompleto(id: Long, hotelRequest: HotelRequest): Hotel {
         val hotel = buscarPorId(id)
         apply {
             hotel.nome = hotelRequest.nome
@@ -45,11 +46,11 @@ class HotelService (private val repository: HotelRepository) {
             hotel.contato = hotelRequest.contato
         }
 
-       return salvar(hotel)
+        return salvar(hotel)
     }
 
     @Transactional
-    fun atualizarParcial(id : Long , hotelRequestFiltro: HotelResquetFiltro) : Hotel {
+    fun atualizarParcial(id: Long, hotelRequestFiltro: HotelResquetFiltro): Hotel {
         val hotel = buscarPorId(id)
         apply {
             hotelRequestFiltro.nome?.let { hotel.nome = it }
@@ -62,27 +63,35 @@ class HotelService (private val repository: HotelRepository) {
     }
 
     @Transactional
-    fun deletar(id : Long) {
+    fun deletar(id: Long) {
         val hotel = repository.findById(id)
         if (hotel.isPresent) {
-            apply { repository.delete(hotel.get())}
+            apply { repository.delete(hotel.get()) }
         }
     }
 
     @Transactional
-    fun buscarTodosFuncionarios(hotel : Hotel) : List<Funcionario> {
-        val todosFuncionarioPorIdHotel : List<Funcionario> = repository.buscarFuncionarios(hotel.id!!)
+    fun buscarTodosFuncionarios(hotel: Hotel): List<Funcionario> {
+        val todosFuncionarioPorIdHotel: List<Funcionario> = repository.buscarFuncionarios(hotel.id!!)
         return todosFuncionarioPorIdHotel
     }
 
 
-
     @Transactional
-    fun buscarTodosQuartos(hotel : Hotel): List<Quarto>{
+    fun buscarTodosQuartos(hotel: Hotel): List<Quarto> {
         val todosQuartoPorId = repository.buscarTodosQuartos(hotel.id!!)
 
         return todosQuartoPorId
     }
 
+    /**
+     * @author diogenes
+     * Métod0 para validar se hotel existe, criado para auxiliar as classe que precisam validar o hotel
+     * caso o hotel existe continuar o código.
+     */
+    fun existe(id: Long) {
+        if (!repository.existsById(id)) throw HotelNaoLocalizadoException("Hotel com ID[${id}] não existe em nosso banco de dados")
+    }
 
 }
+

@@ -111,4 +111,12 @@ class HotelController(val service: HotelService, val hotelAssembler: HotelAssemb
 
 
 
+    // Todo refaratora classe reserva tem que ter id hotel para buscar todos os hospedes !
+    @GetMapping("/{id}/hospedes")
+    fun buscarTodosHospedes(@PathVariable("id") id: Long): ResponseEntity<Any?>? {
+        val hotel = service.buscarPorId(id)
+        return null
+    }
+
+
 }
